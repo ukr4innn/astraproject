@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  website:
+    image: node:20-alpine
+    container_name: astra-website
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DISCORD_CLIENT_ID=1362573139804029332
+      - DISCORD_CLIENT_SECRET=Hv9RVbM7JdetHM91hGPPJ2uKpIBwIPEE
+      - NEXT_PUBLIC_BASE_URL=https://astraproject.shop
+      - DATABASE_URL=postgresql://neondb_owner:npg_O7Iprfb8NJcW@ep-aged-math-ac5m4j0l-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      - ASAAS_API_KEY=aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OjZhYzhkZjA5LTk1OTgtNDI5ZC1hZGI0LWI2YThmODEzNTJhZDo6JGFhY2hfYWQ3ZDk4OGUtMTg4Zi00NTAxLWEwNDktY2ZlZGUzYjJkNmI2
+      - ASAAS_ENVIRONMENT=production
+      - ASAAS_WEBHOOK_SECRET=seu_webhook_secret_aqui
+      - WEBHOOK_URL=https://astraproject.shop
+      - WEBHOOK_PORT=5000
+      - DISCORD_TOKEN=your_discord_token_here
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
